@@ -1,0 +1,140 @@
+{% extends 'persona/base.html' %}
+{% block title %}{{ portfolio.user.first_name|default:portfolio.user.username }}'s Portfolio{% endblock %}
+
+{% block content %}
+<style>
+    /* Override base styles for a professional theme */
+    body {
+        background-color: #f3f4f6; /* A slightly softer gray-200 */
+        color: #1f2937; /* gray-800 */
+    }
+    /* Adjust nav for this theme */
+    nav { background-color: #ffffff; border-color: #d1d5db; }
+    nav a, nav button { color: #374151; }
+    nav a.bg-indigo-600 { color: #ffffff; }
+    nav span { background-image: linear-gradient(to right, #2563eb, #4f46e5); }
+
+    /* Custom style for timeline */
+    .timeline-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 1.25rem;
+        left: 0.45rem;
+        width: 2px;
+        height: 100%;
+        background-color: #e5e7eb; /* gray-200 */
+    }
+</style>
+
+<div class="w-full max-w-6xl mx-auto my-12">
+
+    <!-- Header Section -->
+    <header 
+        class="relative h-64 rounded-t-lg flex flex-col justify-center items-center text-center p-8 text-white shadow-lg overflow-hidden animate-slide-in-up"
+        style="background-image: linear-gradient(rgba(17, 24, 39, 0.6), rgba(17, 24, 39, 0.6)), url('{% if portfolio.background_image %}{{ portfolio.background_image.url }}{% else %}https://placehold.co/1200x400/374151/FFFFFF?text=Persona.AI{% endif %}'); background-size: cover; background-position: center;">
+        
+        <div class="z-10">
+            {% if portfolio.profile_picture %}
+                <img src="{{ portfolio.profile_picture.url }}" alt="Profile Picture" class="h-32 w-32 rounded-full mx-auto border-4 border-white object-cover shadow-lg">
+            {% else %}
+                <div class="w-32 h-32 rounded-full bg-gray-700 mx-auto border-4 border-white flex items-center justify-center">
+                    <span class="text-5xl font-bold text-white">{{ portfolio.user.username.0|upper }}</span>
+                </div>
+            {% endif %}
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-white mt-4">
+                {{ portfolio.user.get_full_name|default:portfolio.user.username }}
+            </h1>
+            <p class="mt-2 text-xl md:text-2xl font-medium text-blue-300">
+                {{ portfolio.job_title|default:'Professional' }}
+            </p>
+        </div>
+    </header>
+
+    <div class="bg-white shadow-xl rounded-b-lg overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-12">
+
+            <!-- Left Sidebar -->
+            <aside class="md:col-span-4 lg:col-span-3 bg-gray-50 border-r border-gray-200 p-8">
+                <div class="sticky top-28">
+                    <div class="space-y-10">
+                        <div>
+                            <h2 class="text-xs font-semibold uppercase text-gray-500 tracking-wider">Contact</h2>
+                            <div class="mt-4 space-y-4">
+                                {% if portfolio.email %}<a href="mailto:{{ portfolio.email }}" class="flex items-center gap-x-3 text-gray-600 hover:text-blue-600 transition-colors text-sm">Email</a>{% endif %}
+                                {% if portfolio.linkedin_url %}<a href="{{ portfolio.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-x-3 text-gray-600 hover:text-blue-600 transition-colors text-sm">LinkedIn</a>{% endif %}
+                                {% if portfolio.github_url %}<a href="{{ portfolio.github_url }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-x-3 text-gray-600 hover:text-blue-600 transition-colors text-sm">GitHub</a>{% endif %}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 class="text-xs font-semibold uppercase text-gray-500 tracking-wider">Skills</h2>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                {% for skill in portfolio.get_skills_list %}
+                                    <span class="bg-gray-200 text-gray-700 text-xs font-medium px-3 py-1 rounded-full">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="md:col-span-8 lg:col-span-9 p-8 md:p-12 space-y-16">
+                
+                <!-- About Section -->
+                <section class="animate-slide-in-up delay-100">
+                    <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-x-3"><span class="w-3 h-3 bg-blue-600 rounded-full"></span>About Me</h2>
+                    <p class="mt-6 text-gray-700 leading-relaxed border-l-2 border-gray-200 pl-6">{{ portfolio.about_me_generated|default:"Professional summary will appear here." }}</p>
+                </section>
+
+                <!-- Work Experience Section -->
+                <section class="animate-slide-in-up delay-200">
+                    <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-x-3"><span class="w-3 h-3 bg-blue-600 rounded-full"></span>Work Experience</h2>
+                    <div class="mt-6 space-y-8 relative">
+                        {% for experience in portfolio.get_experiences %}
+                            <div class="timeline-item pl-8">
+                                <div class="absolute -left-[5px] top-1 h-4 w-4 bg-blue-600 rounded-full border-2 border-white ring-4 ring-gray-200"></div>
+                                <h3 class="text-xl font-semibold text-gray-900">{{ experience.name }}</h3>
+                                <p class="text-md text-blue-600 font-medium my-1">{{ experience.technologies }}</p>
+                                <p class="text-gray-700 leading-relaxed mt-2">{{ experience.description_generated|linebreaksbr }}</p>
+                            </div>
+                        {% empty %}
+                            <p class="text-gray-500">Work experience will appear here.</p>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <!-- Projects Section -->
+                <section class="animate-slide-in-up delay-300">
+                    <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-x-3"><span class="w-3 h-3 bg-blue-600 rounded-full"></span>Projects</h2>
+                    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {% for project in portfolio.get_projects %}
+                            <div class="bg-gray-50 border border-gray-200 p-6 rounded-lg hover:shadow-lg hover:border-blue-300 transition-all duration-300">
+                                <h3 class="text-xl font-semibold text-gray-900">
+                                    {% if project.project_url %}
+                                    <a href="{{ project.project_url }}" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors inline-flex items-center gap-x-2 group">
+                                        <span>{{ project.name }}</span>
+                                        <svg xmlns="http://www.w.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                                    </a>
+                                    {% else %}
+                                        {{ project.name }}
+                                    {% endif %}
+                                </h3>
+                                <div class="flex flex-wrap gap-2 my-2">
+                                    {% for tech in project.get_technologies_list %}
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">{{ tech }}</span>
+                                    {% endfor %}
+                                </div>
+                                <p class="text-gray-700 leading-relaxed mt-3">{{ project.description_generated|linebreaksbr }}</p>
+                            </div>
+                        {% empty %}
+                            <p class="text-gray-500 sm:col-span-2">Personal projects will appear here.</p>
+                        {% endfor %}
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,175 @@
+{% extends 'persona/base.html' %}
+{% block title %}> {{ portfolio.user.username }}'s Terminal{% endblock %}
+
+{% block content %}
+<style>
+    /* Import a monospace font */
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
+
+    /* Override base styles for an experimental/terminal theme */
+    body {
+        background-color: #0d1117; /* GitHub dark-like color */
+        color: #c9d1d9; /* Off-white text */
+        font-family: 'Fira Code', monospace;
+        /* Faint background grid and subtle background image */
+        background-image:
+            linear-gradient(rgba(57, 211, 83, 0.07) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(57, 211, 83, 0.07) 1px, transparent 1px),
+            linear-gradient(rgba(13, 17, 23, 0.95), rgba(13, 17, 23, 0.95)),
+            url('{% if portfolio.background_image %}{{ portfolio.background_image.url }}{% endif %}');
+        background-size: 2rem 2rem, 2rem 2rem, cover, cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+    /* Adjust nav for this theme */
+    nav { background-color: #161b22; border-color: #30363d; }
+    nav a, nav button { color: #c9d1d9; }
+    nav a.bg-indigo-600 { color: #ffffff; }
+    nav span { background-image: linear-gradient(to right, #39d353, #22863a); } /* Green accent */
+
+    /* Custom animations */
+    @keyframes typewriter {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+    @keyframes blinkCaret {
+        50% { border-color: transparent; }
+    }
+    @keyframes scanline {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
+    }
+
+    .typewriter-container { display: inline-block; max-width: 100%; }
+    .typewriter-text {
+        overflow: hidden;
+        border-right: .15em solid #39d353;
+        white-space: nowrap;
+        letter-spacing: .1em;
+        animation: typewriter 2s steps(20, end) 1s 1 normal both, blinkCaret .75s step-end infinite;
+    }
+    
+    /* Scanline overlay effect */
+    .scanline-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 200%;
+        pointer-events: none;
+        background: linear-gradient(to bottom, rgba(13, 17, 23, 0), rgba(13, 17, 23, 0.5) 50%, rgba(13, 17, 23, 0));
+        background-size: 100% 6px;
+        animation: scanline 20s linear infinite;
+        z-index: 100;
+        opacity: 0.2;
+    }
+
+    /* Glow effect for text and borders */
+    .glow-text {
+        text-shadow: 0 0 5px rgba(57, 211, 83, 0.7), 0 0 10px rgba(57, 211, 83, 0.5);
+    }
+    .glow-border {
+        box-shadow: 0 0 15px rgba(57, 211, 83, 0.2);
+    }
+</style>
+
+<div class="w-full max-w-6xl mx-auto p-4 md:p-8 relative">
+    <!-- Scanline effect is applied here -->
+    <div class="scanline-overlay"></div>
+    
+    <!-- Header with a terminal-like feel -->
+    <header class="border-2 border-green-400/50 p-6 rounded-md glow-border animate-slide-in-up flex items-start gap-x-6">
+        
+        <!-- === PROFILE PICTURE ADDED HERE === -->
+        {% if portfolio.profile_picture %}
+        <div class="flex-shrink-0">
+            <img src="{{ portfolio.profile_picture.url }}" alt="Profile Picture" class="h-24 w-24 rounded-md border-2 border-green-400/50 object-cover" style="filter: grayscale(1) contrast(1.2) brightness(0.9);">
+        </div>
+        {% endif %}
+
+        <div class="flex-grow">
+            <!-- === NAME AND TITLE RESTRUCTURED AND RESIZED === -->
+            <p class="text-green-400 text-lg">>&nbsp;<span class="text-white">{{ portfolio.job_title|default:'System.load(Professional)' }}</span></p>
+            <div class="typewriter-container">
+                 <h1 class="typewriter-text text-5xl md:text-7xl font-semibold text-white mt-2">> {{ portfolio.user.get_full_name|default:portfolio.user.username }}</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-8">
+        <!-- Left Column: SysInfo & Links -->
+        <aside class="lg:col-span-2 space-y-8 animate-slide-in-up delay-100">
+            <section class="border border-gray-700 rounded p-4">
+                <h2 class="text-green-400 font-semibold glow-text">// sys.info: ABOUT</h2>
+                <p class="mt-4 text-gray-400 text-sm leading-relaxed">{{ portfolio.about_me_generated|default:"Data not found. Please run analysis." }}</p>
+            </section>
+            <section class="border border-gray-700 rounded p-4">
+                <h2 class="text-green-400 font-semibold glow-text">// connections: LINKS</h2>
+                 <div class="mt-4 space-y-2">
+                    {% if portfolio.email %}<a href="mailto:{{ portfolio.email }}" class="block text-gray-300 hover:bg-green-400/10 hover:text-green-300 transition-all text-sm p-1 rounded">> mailto:{{ portfolio.email }}</a>{% endif %}
+                    {% if portfolio.linkedin_url %}<a href="{{ portfolio.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="block text-gray-300 hover:bg-green-400/10 hover:text-green-300 transition-all text-sm p-1 rounded">> open --linkedin</a>{% endif %}
+                    {% if portfolio.github_url %}<a href="{{ portfolio.github_url }}" target="_blank" rel="noopener noreferrer" class="block text-gray-300 hover:bg-green-400/10 hover:text-green-300 transition-all text-sm p-1 rounded">> open --github</a>{% endif %}
+                </div>
+            </section>
+             <section class="border border-gray-700 rounded p-4">
+                <h2 class="text-green-400 font-semibold glow-text">// modules: SKILLS</h2>
+                <div class="mt-4 flex flex-wrap gap-2">
+                    {% for skill in portfolio.get_skills_list %}
+                        <span class="border border-gray-600 text-gray-300 text-xs font-medium px-2.5 py-1 rounded">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </section>
+        </aside>
+
+        <!-- Right Column: Logs -->
+        <div class="lg:col-span-3 space-y-8 animate-slide-in-up delay-200">
+            <section class="border border-gray-700 rounded p-4">
+                <h2 class="text-green-400 font-semibold glow-text">// log: WORK_EXPERIENCE</h2>
+                <div class="mt-4 space-y-6">
+                    {% for experience in portfolio.get_experiences %}
+                        <div>
+                            <p class="font-semibold text-white">> {{ experience.name }}</p>
+                            <p class="text-sm text-green-400 my-1 ml-4">> @{{ experience.technologies }}</p>
+                            <p class="text-sm text-gray-400 leading-relaxed ml-4">{{ experience.description_generated|linebreaksbr }}</p>
+                        </div>
+                    {% empty %}
+                        <p class="text-gray-500">> No logs found.</p>
+                    {% endfor %}
+                </div>
+            </section>
+
+             <section class="border border-gray-700 rounded p-4">
+                <h2 class="text-green-400 font-semibold glow-text">// log: PROJECTS</h2>
+                <p class="text-gray-500 text-xs mt-1">----------------------------------</p>
+                <div class="mt-4 space-y-6">
+                    {% for project in portfolio.get_projects %}
+                        <div>
+                            <p class="font-semibold text-white">
+                                {% if project.project_url %}
+                                <a href="{{ project.project_url }}" target="_blank" rel="noopener noreferrer" class="hover:text-green-300 transition-colors inline-flex items-center gap-x-2">
+                                    > {{ project.name }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                                </a>
+                                {% else %}
+                                    > {{ project.name }}
+                                {% endif %}
+                            </p>
+                             <div class="flex flex-wrap gap-2 my-2 ml-4">
+                                {% for tech in project.get_technologies_list %}
+                                    <span class="bg-gray-700 text-green-300 text-xs font-medium px-2 py-0.5 rounded-sm">{{ tech }}</span>
+                                {% endfor %}
+                            </div>
+                            <p class="text-sm text-gray-400 leading-relaxed ml-4">{{ project.description_generated|linebreaksbr }}</p>
+                        </div>
+                    {% empty %}
+                        <p class="text-gray-500">> No logs found.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer is inherited from base.html -->
+</div>
+{% endblock %}
+

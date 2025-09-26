@@ -1,0 +1,171 @@
+{% extends 'persona/base.html' %}
+{% block title %}Dashboard - Persona.AI{% endblock %}
+
+{% block content %}
+<style>
+    /* Custom keyframe animations for a polished feel */
+    @keyframes slideInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slide-in-up {
+        animation: slideInUp 0.6s ease-out forwards;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-500 { animation-delay: 0.5s; }
+</style>
+
+<!-- Main container -->
+<div class="w-full max-w-7xl">
+    
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+
+        <!-- Left Column: AI Actions & Instructions -->
+        <div class="lg:col-span-2">
+            <div class="sticky top-28 space-y-8">
+                <div class="bg-black/20 p-6 rounded-2xl border border-gray-700 backdrop-blur-lg shadow-2xl animate-slide-in-up">
+                    <h2 class="text-xl font-semibold text-white mb-4 flex items-center gap-x-3">
+                        <span class="bg-indigo-500 text-white text-sm font-bold w-8 h-8 flex items-center justify-center rounded-full ring-2 ring-indigo-400/50">1</span>
+                        <span>Start the Magic</span>
+                    </h2>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="{{ upload_form.resume.id_for_label }}" class="block text-md font-medium text-gray-200 mb-3">Upload Resume</label>
+                        {{ upload_form.resume }}
+                        {% if upload_form.resume.errors %}<p class="mt-2 text-xs text-red-400">{{ upload_form.resume.errors|first }}</p>{% endif %}
+                        {% if portfolio.resume %}
+                            <p class="text-xs text-gray-400 mt-2">Current file: <a href="{{ portfolio.resume.url }}" class="text-indigo-400 hover:underline" target="_blank">{{ portfolio.resume.name|truncatechars:30 }}</a></p>
+                        {% endif %}
+                        <button type="submit" name="upload_resume" class="mt-6 w-full flex items-center justify-center gap-x-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-indigo-500/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd" /></svg>
+                            Analyze with AI
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="bg-black/20 p-6 rounded-2xl border border-gray-700 backdrop-blur-lg shadow-2xl animate-slide-in-up delay-100">
+                    <h2 class="text-xl font-semibold text-white mb-4 flex items-center gap-x-3">
+                        <span class="bg-green-500 text-white text-sm font-bold w-8 h-8 flex items-center justify-center rounded-full ring-2 ring-green-400/50">2</span>
+                        <span>Review & Refine</span>
+                    </h2>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Use the forms on the right to edit your profile. You can also manually add new work experience or project entries.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Edit Details -->
+        <div class="lg:col-span-3">
+            <form method="post" enctype="multipart/form-data" class="space-y-8">
+                {% csrf_token %}
+                
+                <!-- Main Portfolio Details -->
+                <div class="bg-black/20 p-6 rounded-2xl border border-gray-700 backdrop-blur-lg shadow-2xl animate-slide-in-up delay-200">
+                    <h2 class="text-xl font-semibold text-white mb-6">Edit Your Core Profile</h2>
+                    {% if details_form.non_field_errors %}<div class="p-4 mb-4 text-sm text-red-200 bg-red-900 rounded-lg" role="alert">{{ details_form.non_field_errors }}</div>{% endif %}
+                    <div class="space-y-6">
+                        <div>
+                            <label for="{{ details_form.design_template.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Portfolio Design</label>
+                            {{ details_form.design_template }}{% if details_form.design_template.errors %}<p class="mt-2 text-xs text-red-400">{{ details_form.design_template.errors|first }}</p>{% endif %}
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label for="{{ details_form.job_title.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Job Title</label>{{ details_form.job_title }}{% if details_form.job_title.errors %}<p class="mt-2 text-xs text-red-400">{{ details_form.job_title.errors|first }}</p>{% endif %}</div>
+                            <div><label for="{{ details_form.background_image.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Background Image</label>{{ details_form.background_image }}{% if details_form.background_image.errors %}<p class="mt-2 text-xs text-red-400">{{ details_form.background_image.errors|first }}</p>{% endif %}</div>
+                        </div>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label for="{{ details_form.email.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Contact Email</label>{{ details_form.email }}{% if details_form.email.errors %}<p class="mt-2 text-xs text-red-400">{{ details_form.email.errors|first }}</p>{% endif %}</div>
+                            <div><label for="{{ details_form.linkedin_url.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">LinkedIn URL</label>{{ details_form.linkedin_url }}{% if details_form.linkedin_url.errors %}<p class="mt-2 text-xs text-red-400">{{ details_form.linkedin_url.errors|first }}</p>{% endif %}</div>
+                        </div>
+                        <div><label for="{{ details_form.github_url.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">GitHub URL</label>{{ details_form.github_url }}{% if details_form.github_url.errors %}<p class="mt-2 text-xs text-red-400">{{ details_form.github_url.errors|first }}</p>{% endif %}</div>
+                        <div><label for="{{ details_form.about_me_generated.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">AI-Generated Summary</label>{{ details_form.about_me_generated }}{% if details_form.about_me_generated.errors %}<p class="mt-2 text-xs text-red-400">{{ details_form.about_me_generated.errors|first }}</p>{% endif %}</div>
+                        <div><label for="{{ details_form.skills_input.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Key Skills</label>{{ details_form.skills_input }}{% if details_form.skills_input.errors %}<p class="mt-2 text-xs text-red-400">{{ details_form.skills_input.errors|first }}</p>{% endif %}</div>
+                    </div>
+                </div>
+
+                <!-- EDITABLE WORK EXPERIENCE SECTION -->
+                <div class="bg-black/20 p-6 rounded-2xl border border-gray-700 backdrop-blur-lg shadow-2xl animate-slide-in-up delay-300">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-white">Edit: Work Experience</h2>
+                        <button type="button" id="add-experience-btn" class="text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-3 rounded-lg flex items-center gap-x-1">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                            Add New
+                        </button>
+                    </div>
+                    {{ experience_formset.management_form }}
+                    <div id="experience-forms-container" class="space-y-6">
+                        {% for form in experience_formset %}<div class="bg-gray-800/70 p-4 rounded-lg border border-gray-700">{{ form.id }}<div class="space-y-4">{% for field in form.visible_fields %}<div><label for="{{ field.id_for_label }}" class="block text-xs font-medium text-gray-400 mb-1">{{ field.label }}</label>{{ field }}{% if field.errors %}<p class="mt-1 text-xs text-red-400">{{ field.errors|first }}</p>{% endif %}</div>{% endfor %}</div></div>{% endfor %}
+                    </div>
+                </div>
+
+                <!-- EDITABLE PROJECTS SECTION -->
+                <div class="bg-black/20 p-6 rounded-2xl border border-gray-700 backdrop-blur-lg shadow-2xl animate-slide-in-up delay-500">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-white">Edit: Projects</h2>
+                        <button type="button" id="add-project-btn" class="text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-3 rounded-lg flex items-center gap-x-1">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                            Add New
+                        </button>
+                    </div>
+                    {{ project_formset.management_form }}
+                    <div id="project-forms-container" class="space-y-6">
+                        {% for form in project_formset %}<div class="bg-gray-800/70 p-4 rounded-lg border border-gray-700">{{ form.id }}<div class="space-y-4">{% for field in form.visible_fields %}<div><label for="{{ field.id_for_label }}" class="block text-xs font-medium text-gray-400 mb-1">{{ field.label }}</label>{{ field }}{% if field.errors %}<p class="mt-1 text-xs text-red-400">{{ field.errors|first }}</p>{% endif %}</div>{% endfor %}</div></div>{% endfor %}
+                    </div>
+                </div>
+
+                <!-- Save Button for the entire form -->
+                <div class="animate-slide-in-up delay-500">
+                    <button type="submit" name="update_details" class="w-full flex items-center justify-center gap-x-2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-green-500/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                        Save All Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- HIDDEN TEMPLATES FOR NEW FORMS -->
+<div id="experience-empty-form" class="hidden">
+    <div class="bg-gray-800/70 p-4 rounded-lg border border-gray-700">{{ experience_formset.empty_form.id }}<div class="space-y-4">{% for field in experience_formset.empty_form.visible_fields %}<div><label for="{{ field.id_for_label }}" class="block text-xs font-medium text-gray-400 mb-1">{{ field.label }}</label>{{ field }}</div>{% endfor %}</div></div>
+</div>
+<div id="project-empty-form" class="hidden">
+    <div class="bg-gray-800/70 p-4 rounded-lg border border-gray-700">{{ project_formset.empty_form.id }}<div class="space-y-4">{% for field in project_formset.empty_form.visible_fields %}<div><label for="{{ field.id_for_label }}" class="block text-xs font-medium text-gray-400 mb-1">{{ field.label }}</label>{{ field }}</div>{% endfor %}</div></div>
+</div>
+
+
+<!-- JAVASCRIPT FOR DYNAMICALLY ADDING FORMS -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function addForm(buttonId, containerId, emptyFormId, formPrefix) {
+            const addBtn = document.getElementById(buttonId);
+            const container = document.getElementById(containerId);
+            const emptyFormTemplate = document.getElementById(emptyFormId).innerHTML;
+            const totalFormsInput = document.querySelector(`#id_${formPrefix}-TOTAL_FORMS`);
+
+            addBtn.addEventListener('click', function() {
+                let formNum = parseInt(totalFormsInput.value);
+                
+                const newForm = document.createElement('div');
+                newForm.innerHTML = emptyFormTemplate.replace(/__prefix__/g, formNum);
+                
+                // Add a small animation for the new form
+                newForm.firstElementChild.classList.add('animate-slide-in-up');
+
+                container.appendChild(newForm);
+                totalFormsInput.value = formNum + 1;
+            });
+        }
+
+        addForm('add-experience-btn', 'experience-forms-container', 'experience-empty-form', 'experience');
+        addForm('add-project-btn', 'project-forms-container', 'project-empty-form', 'project');
+    });
+</script>
+
+{% endblock %}
+

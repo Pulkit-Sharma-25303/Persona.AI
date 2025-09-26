@@ -1,0 +1,75 @@
+{% extends 'persona/base.html' %}
+{% block title %}Persona.AI - AI-Powered Portfolio Websites{% endblock %}
+
+{% block content %}
+<style>
+    /* Custom keyframe animation for each character in the title */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px) scale(0.8); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .animated-char { display: inline-block; opacity: 0; animation: fadeInUp 0.5s ease-out forwards; }
+    .title-glow { text-shadow: 0 0 15px rgba(167, 139, 250, 0.4), 0 0 30px rgba(124, 58, 237, 0.3); }
+</style>
+
+<!-- Main container -->
+<div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24 md:space-y-32">
+
+    <!-- Hero Section - NEW DESIGN -->
+    <section class="flex items-center justify-center pt-24 md:pt-32 min-h-[80vh]">
+        <!-- The dark, rounded container with glassmorphism -->
+        <div class="relative w-full max-w-4xl bg-black/20 p-12 md:p-16 rounded-2xl shadow-2xl border border-gray-700 backdrop-blur-lg overflow-hidden">
+            
+            <!-- Background Layered Text - Large & Faint -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
+                <h1 class="text-[10rem] md:text-[14rem] font-extrabold text-gray-500 opacity-10 -translate-y-4 select-none">
+                    Persona.AI
+                </h1>
+            </div>
+
+            <!-- Foreground Content -->
+            <div class="relative z-10 text-center">
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white title-glow" id="animated-title">
+                    <!-- Animated Title -->
+                    <span class="animated-char" style="animation-delay: 0.1s;">P</span><span class="animated-char" style="animation-delay: 0.15s;">e</span><span class="animated-char" style="animation-delay: 0.2s;">r</span><span class="animated-char" style="animation-delay: 0.25s;">s</span><span class="animated-char" style="animation-delay: 0.3s;">o</span><span class="animated-char" style="animation-delay: 0.35s;">n</span><span class="animated-char" style="animation-delay: 0.4s;">a</span><span class="animated-char bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400" style="animation-delay: 0.45s;">.</span><span class="animated-char bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400" style="animation-delay: 0.5s;">A</span><span class="animated-char bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400" style="animation-delay: 0.55s;">I</span>
+                </h1>
+                <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-gray-300 animate-slide-in-up delay-500">
+                    Your Career Story, Reimagined. Instantly generate a stunning, professional portfolio website from your resume.
+                </p>
+                <div class="mt-10 animate-slide-in-up delay-500">
+                    <a href="{% url 'persona:signup' %}" class="rounded-md bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition-transform transform hover:scale-105">
+                        Get Started for Free
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="text-center animate-slide-in-up">
+        <h2 class="text-3xl md:text-4xl font-bold text-white">A Seamless Process in Three Steps</h2>
+        <p class="mt-4 max-w-2xl mx-auto text-gray-400">From a simple document to a live portfolio in minutes.</p>
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+            <!-- Step 1 -->
+            <div class="bg-black/20 p-8 rounded-2xl border border-gray-700 hover:border-indigo-500/80 transition-all duration-300 backdrop-blur-lg transform hover:-translate-y-2"><div class="text-4xl mb-4">📄</div><h3 class="text-xl font-semibold text-white">1. Upload Resume</h3><p class="mt-2 text-gray-400">Start by uploading your current resume. We securely handle PDF and DOCX files to extract your career data.</p></div>
+            <!-- Step 2 -->
+            <div class="bg-black/20 p-8 rounded-2xl border border-gray-700 hover:border-indigo-500/80 transition-all duration-300 backdrop-blur-lg transform hover:-translate-y-2"><div class="text-4xl mb-4">✨</div><h3 class="text-xl font-semibold text-white">2. Witness the AI Magic</h3><p class="mt-2 text-gray-400">Our AI analyzes your experience and skills, crafting professional text for every section of your portfolio.</p></div>
+            <!-- Step 3 -->
+            <div class="bg-black/20 p-8 rounded-2xl border border-gray-700 hover:border-indigo-500/80 transition-all duration-300 backdrop-blur-lg transform hover:-translate-y-2"><div class="text-4xl mb-4">🎨</div><h3 class="text-xl font-semibold text-white">3. Customize & Publish</h3><p class="mt-2 text-gray-400">Review the AI content, choose from multiple beautiful themes, and publish your new site.</p></div>
+        </div>
+    </section>
+    
+    <!-- Final CTA Section -->
+    <section class="text-center bg-black/20 rounded-2xl p-12 my-16 border border-gray-700 backdrop-blur-lg animate-slide-in-up">
+         <h2 class="text-3xl md:text-4xl font-bold text-white">Ready to Build Your Portfolio in Minutes?</h2>
+         <p class="mt-4 max-w-2xl mx-auto text-gray-400">Join Persona.AI and let your career story write itself.</p>
+         <div class="mt-8">
+            <a href="{% url 'persona:signup' %}" class="rounded-md bg-indigo-600 px-8 py-4 text-lg font-semibold text-white shadow-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500 transition-transform transform hover:scale-105">
+                Sign Up Now
+            </a>
+         </div>
+    </section>
+
+</div>
+{% endblock %}
+
