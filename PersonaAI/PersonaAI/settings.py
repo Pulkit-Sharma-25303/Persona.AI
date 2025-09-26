@@ -85,6 +85,7 @@ DATABASES = {
     'default': dj_database_url.config(
 
         default='postgresql://postgres:nomad2693@localhost/PersonaAI_db',
+        ssl_require=False,
         conn_max_age=600
     )
 }
