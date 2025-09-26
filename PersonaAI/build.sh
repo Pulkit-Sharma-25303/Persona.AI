@@ -2,6 +2,12 @@
 # exit on error
 set -o errexit
 
+# --- This is new and important ---
+# Change to the directory that contains your manage.py file.
+# If your project is in a subfolder named 'PersonaAI', use that.
+# If not, remove or change this line.
+# cd PersonaAI 
+
 # Install all the packages from requirements.txt
 pip install -r requirements.txt
 
