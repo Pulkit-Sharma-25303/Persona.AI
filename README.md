@@ -1,6 +1,7 @@
 # Persona.AI - AI-Powered Portfolio Generator
 
 Persona.AI is a web application that leverages AI to automatically generate beautiful, professional portfolio websites directly from a user's resume. Upload your resume, let the AI extract and polish your information, choose a stunning design, and share your unique career story with the world.
+
 ✨ Key Features
 📄 Resume Upload: Supports PDF and DOCX resume formats.
 🧠 AI-Powered Content Extraction: Uses AI (configurable for local Ollama or cloud providers) to parse resumes, extracting:
@@ -40,7 +41,7 @@ PostgreSQL installed and running
 Git
 Setup Instructions
 Clone the Repository:
-git clone [https://github.com/YourUsername/Persona.AI.git](https://github.com/YourUsername/Persona.AI.git)
+git clone [https://github.com/Pulkit-Sharma-25303/Persona.AI/tree/main](https://github.com/Pulkit-Sharma-25303/Persona.AI/tree/main)
 cd Persona.AI
 
 Navigate to Project Directory:
